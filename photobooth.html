@@ -1,0 +1,74 @@
+<html>
+<title>PhotoBooth</title>
+<body>
+
+Video Element: <br>
+<video id='vid' autoplay="true" src='about:streamurl' controls></video><br>
+<!--Canvas Element: <br>
+<canvas id='cv'></canvas> -->
+<img id='output'></img>
+<br>
+<button id='photo' onclick=CapturePhoto()>Capture Photo</button>
+<button id='photosave' onclick=SavePhoto()>Save Photo</button>
+<script>
+ var video = document.getElementById('vid');
+ var canvas = document.getElementById('cv');
+ 
+  if (navigator.getUserMedia) {
+      navigator.getUserMedia('video', successCallback, errorCallback);
+      
+      function successCallback(stream) {
+          video.src = stream;
+          
+      }
+      function errorCallback(error) 
+      {
+          console.error('An error occurred: [CODE ' + error.code + ']');
+       
+      }
+  } 
+  else 
+  {
+      console.log('Native web camera streaming (getUserMedia) is not supported in this browser.');  
+  }
+  
+  
+function CapturePhoto()
+{
+console.log('taking photo');
+
+var video = document.getElementById('vid');
+var photo = document.getElementById('output');
+//var canvas = document.getElementById('cv');
+
+
+var canvas = document.createElement('canvas');
+canvas.width  = video.videoWidth;
+canvas.height = video.videoHeight;
+var ctx = canvas.getContext('2d');
+ctx.drawImage(video, 0, 0);
+
+
+/*
+canvas.width  = video.videoWidth;
+canvas.height = video.videoHeight;
+var ctx = canvas.getContext('2d');
+ctx.drawImage(video, 0, 0);
+*/
+photo.width = canvas.width;
+photo.height = canvas.height;
+photo.src = canvas.toDataURL('image/png');
+
+
+
+}
+
+function SavePhoto()
+{
+var photo = document.getElementById('output');
+window.location = photo.src;
+}
+</script>
+
+</body>
+</html>
