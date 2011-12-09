@@ -1,16 +1,68 @@
 <html>
+<head>
 <title>PhotoBooth</title>
+
+<style type="text/css">
+canvas
+{
+border-width:1px;
+
+}
+</style>
+
+
+
+</head>
 <body>
 
-Video Element: <br>
-<video id='vid' autoplay="true" src='about:streamurl' controls></video><br>
-<!--Canvas Element: <br>
-<canvas id='cv'></canvas> -->
-<img id='output'></img>
+
+<table>
+<tr>
+
+<td>
+
+<div style='border:1px solid black; border-radius:5px'>
+Apply Filter: <br>
+<select id='filter' style='width:100px'>
+<option value="none">None</option>
+<option value="sepia">Sepia</option>
+<option value="blurfast">Blur</option>
+<option value='desaturate'>Desaturate</option>
+<option value='invert'>Invert</option>
+<option value='mosaic'>Mosaic</option>
+<option value='sharpen'>Sharpen</option>
+<option value='posterize'>Posterize</option>
+<option value='edges2'> Edge Detect</option>
+</select>
 <br>
+<canvas id='filtered' width=640px height=480px></canvas>
+</div>
+
+</td>
+<td>
+
+
+<video id='vid' autoplay="true" src='about:streamurl' width=0px height=0px controls style="visibility:hidden"></video>
+
+
+
+</td>
+</tr>
+</table>
+<br>
+
 <button id='photo' onclick=CapturePhoto()>Capture Photo</button>
 <button id='photosave' onclick=SavePhoto()>Save Photo</button>
+<br>
+<img id='output' width=640px height=480px></img>
+<!--<canvas id='cv' width=640px height=480px style='visibility:false'></canvas> -->
+
+
+<script type="text/javascript" src="pixastic.custom.js"></script>
 <script>
+
+
+// set up video
  var video = document.getElementById('vid');
  var canvas = document.getElementById('cv');
  
@@ -33,35 +85,80 @@ Video Element: <br>
   }
   
   
+  // Fill in the filter canvases
+
+setInterval(function()
+{
+var video = document.getElementById('vid');
+var canvas = document.getElementById('filtered');
+var ctx = canvas.getContext('2d');
+ctx.drawImage(video, 0,0, canvas.width, canvas.height );
+
+
+switch (document.getElementById('filter').value)
+{
+case 'none':
+break;
+case 'sepia':
+Pixastic.process(document.getElementById('filtered'), "sepia");
+break;
+case 'blurfast':
+Pixastic.process(document.getElementById('filtered'), "blurfast", {amount:0.5});
+break;
+case 'desaturate':
+Pixastic.process(document.getElementById('filtered'), "desaturate", {average:false});
+break;
+case 'invert':
+Pixastic.process(document.getElementById('filtered'), "invert");
+break;
+case 'mosaic':
+Pixastic.process(document.getElementById('filtered'), "mosaic", {blockSize:5});
+break;
+case 'sharpen':
+Pixastic.process(document.getElementById('filtered'), "sharpen", {amount:0.6});
+break;
+case 'posterize':
+Pixastic.process(document.getElementById('filtered'), "posterize", {levels:8});
+break;
+case 'edges2':
+Pixastic.process(document.getElementById('filtered'), "edges2");
+}
+
+
+}, 1000/25);
+  
+  
 function CapturePhoto()
 {
 console.log('taking photo');
 
-var video = document.getElementById('vid');
+var video = document.getElementById('filtered');
 var photo = document.getElementById('output');
 //var canvas = document.getElementById('cv');
-
-
+/*
 var canvas = document.createElement('canvas');
+canvas.id = 'tempcanvas';
+
 canvas.width  = video.videoWidth;
 canvas.height = video.videoHeight;
 var ctx = canvas.getContext('2d');
-ctx.drawImage(video, 0, 0);
+ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-
+*/
 /*
 canvas.width  = video.videoWidth;
 canvas.height = video.videoHeight;
 var ctx = canvas.getContext('2d');
 ctx.drawImage(video, 0, 0);
 */
-photo.width = canvas.width;
-photo.height = canvas.height;
-photo.src = canvas.toDataURL('image/png');
-
+photo.width = video.width;
+photo.height = video.height;
+photo.src = video.toDataURL('image/png');
 
 
 }
+
+
 
 function SavePhoto()
 {
