@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 <title>PhotoBooth</title>
@@ -8,6 +9,13 @@ canvas
 border-width:1px;
 
 }
+
+body
+{
+background-color:#0e3d71;
+}
+
+
 </style>
 
 
@@ -15,15 +23,13 @@ border-width:1px;
 </head>
 <body>
 
+<div style='border:1px solid #09223E; border-radius:10px; width:700px; background-color: #09223E; color:#FFFFFF'>
+<br>
+<center>
+<canvas id='filtered' width=640px height=480px style='border-radius:10px'></canvas><br>
 
-<table>
-<tr>
-
-<td>
-
-<div style='border:1px solid black; border-radius:5px'>
-Apply Filter: <br>
-<select id='filter' style='width:100px'>
+Apply Filter: 
+<select id='filter' style='width:200px'>
 <option value="none">None</option>
 <option value="sepia">Sepia</option>
 <option value="blurfast">Blur</option>
@@ -34,21 +40,14 @@ Apply Filter: <br>
 <option value='posterize'>Posterize</option>
 <option value='edges2'> Edge Detect</option>
 </select>
-<br>
-<canvas id='filtered' width=640px height=480px></canvas>
-</div>
+</center>
 
-</td>
-<td>
+</div>
 
 
 <video id='vid' autoplay="true" src='about:streamurl' width=0px height=0px controls style="visibility:hidden"></video>
 
 
-
-</td>
-</tr>
-</table>
 <br>
 
 <button id='photo' onclick=CapturePhoto()>Capture Photo</button>
