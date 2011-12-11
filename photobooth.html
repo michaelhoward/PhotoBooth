@@ -38,7 +38,9 @@ Apply Filter:
 <option value='mosaic'>Mosaic</option>
 <option value='sharpen'>Sharpen</option>
 <option value='posterize'>Posterize</option>
-<option value='edges2'> Edge Detect</option>
+<option value='edges2'>Edge Detect</option>
+<option value='glow'>Glow</option>
+<option value='pointillize'>Pointillize</option>
 </select>
 </center>
 
@@ -121,6 +123,13 @@ Pixastic.process(document.getElementById('filtered'), "posterize", {levels:8});
 break;
 case 'edges2':
 Pixastic.process(document.getElementById('filtered'), "edges2");
+break;
+case 'glow':
+Pixastic.process(document.getElementById('filtered'), "glow", {amount:0.9, radius:0.2});
+break;
+case 'pointillize':
+Pixastic.process(document.getElementById('filtered'), "pointillize", {radius:5, density:1.5, noise:1.0, transparent:false});
+break;
 }
 
 
