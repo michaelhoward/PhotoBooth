@@ -48,8 +48,6 @@ Apply Filter:
 
 
 <video id='vid' autoplay="true" src='about:streamurl' width=0px height=0px controls style="visibility:hidden"></video>
-
-
 <br>
 
 <button id='photo' onclick=CapturePhoto()>Capture Photo</button>
@@ -67,18 +65,23 @@ Apply Filter:
  var video = document.getElementById('vid');
  var canvas = document.getElementById('cv');
  
-  if (navigator.getUserMedia) {
-      navigator.getUserMedia('video', successCallback, errorCallback);
-      
-      function successCallback(stream) {
-          video.src = stream;
-          
-      }
-      function errorCallback(error) 
+function errorCallback(error) 
       {
           console.error('An error occurred: [CODE ' + error.code + ']');
        
       }
+ 
+ if (!navigator.getUserMedia)
+ navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+ 
+ 
+  if (navigator.getUserMedia) 
+  {
+  
+   
+     navigator.getUserMedia('video', function(localMediaStream){video.src = window.webkitURL.createObjectURL(localMediaStream);}, errorCallback);
+       
+     
   } 
   else 
   {
