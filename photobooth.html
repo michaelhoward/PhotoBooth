@@ -64,8 +64,10 @@ Apply Filter:
 
 // set up video
  var video = document.getElementById('vid');
- var canvas = document.getElementById('cv');
- 
+ var canvas = document.getElementById('filtered');
+ var ctx = canvas.getContext('2d');
+ var filterSelection = document.getElementById('filter');
+
 function errorCallback(error) 
       {
           console.error('An error occurred: [CODE ' + error.code + ']');
@@ -73,14 +75,22 @@ function errorCallback(error)
       }
  
  if (!navigator.getUserMedia)
- navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||navigator.msGetUserMedia;
- 
+ {
+ 	navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+ }
  
   if (navigator.getUserMedia) 
   {
   
-   
-     navigator.getUserMedia('video', function(localMediaStream){video.src = window.webkitURL.createObjectURL(localMediaStream);}, errorCallback);
+   	window.URL = window.webkitURL || window.URL;
+     navigator.getUserMedia({video: true}, function(localMediaStream){
+    
+     if (navigator.webkitGetUserMedia) {
+    	  video.src = window.webkitURL.createObjectURL(localMediaStream); // webkit
+    	} else {
+      video.src = localMediaStream; // Opera
+    	}
+     }, errorCallback);
        
      
   } 
@@ -97,47 +107,51 @@ setInterval(function()
 var video = document.getElementById('vid');
 var canvas = document.getElementById('filtered');
 var ctx = canvas.getContext('2d');
-ctx.drawImage(video, 0,0, canvas.width, canvas.height );
+//var filterSelection = document.getElementById('filter');
+//canvas.width = canvas.width;
+ctx.drawImage(video, 0,0, 640, 480 );
 
 
-switch (document.getElementById('filter').value)
+
+
+switch (filterSelection.value)
 {
 case 'none':
 break;
 case 'sepia':
-Pixastic.process(document.getElementById('filtered'), "sepia");
+Pixastic.process(canvas, "sepia");
 break;
 case 'blurfast':
-Pixastic.process(document.getElementById('filtered'), "blurfast", {amount:0.5});
+Pixastic.process(canvas, "blurfast", {amount:0.5});
 break;
 case 'desaturate':
-Pixastic.process(document.getElementById('filtered'), "desaturate", {average:false});
+Pixastic.process(canvas, "desaturate", {average:false});
 break;
 case 'invert':
-Pixastic.process(document.getElementById('filtered'), "invert");
+Pixastic.process(canvas, "invert");
 break;
 case 'mosaic':
-Pixastic.process(document.getElementById('filtered'), "mosaic", {blockSize:5});
+Pixastic.process(canvas, "mosaic", {blockSize:20});
 break;
 case 'sharpen':
-Pixastic.process(document.getElementById('filtered'), "sharpen", {amount:0.6});
+Pixastic.process(canvas, "sharpen", {amount:0.6});
 break;
 case 'posterize':
-Pixastic.process(document.getElementById('filtered'), "posterize", {levels:8});
+Pixastic.process(canvas, "posterize", {levels:8});
 break;
 case 'edges2':
-Pixastic.process(document.getElementById('filtered'), "edges2");
+Pixastic.process(canvas, "edges2");
 break;
 case 'glow':
-Pixastic.process(document.getElementById('filtered'), "glow", {amount:0.9, radius:0.2});
+Pixastic.process(canvas, "glow", {amount:0.9, radius:0.2});
 break;
 case 'pointillize':
-Pixastic.process(document.getElementById('filtered'), "pointillize", {radius:5, density:1.5, noise:1.0, transparent:false});
+Pixastic.process(canvas, "pointillize", {radius:18, density:2.0, noise:1.0, transparent:false});
 break;
 }
 
 
-}, 1000/25);
+}, 1000/20);
   
   
 function CapturePhoto()
